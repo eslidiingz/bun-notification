@@ -10,7 +10,7 @@ import type {
   NotificationResult,
 } from './types';
 
-export class BunNotification {
+export class Notification {
   private lineNotify?: LineNotify;
   private lineMessaging?: LineMessaging;
   private config: BunNotificationConfig;
@@ -249,4 +249,4 @@ export { LineNotify } from './line-notify';
 export * from './types';
 
 // Default export
-export default BunNotification;
+export default Notification;

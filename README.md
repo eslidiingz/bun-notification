@@ -39,10 +39,10 @@ pnpm add bun-notification
 ### LINE Notify
 
 ```typescript
-import BunNotification from 'bun-notification';
+import Notification from 'bun-notification';
 
 // Initialize with LINE Notify token
-const notification = new BunNotification({
+const notification = new Notification({
   lineNotifyToken: 'YOUR_LINE_NOTIFY_TOKEN',
   defaultApi: 'notify',
 });
@@ -54,10 +54,10 @@ await notification.sendNotifyText('Hello from Bun!');
 ### LINE Messaging API
 
 ```typescript
-import BunNotification from 'bun-notification';
+import Notification from 'bun-notification';
 
 // Initialize with Messaging API config
-const notification = new BunNotification({
+const notification = new Notification({
   lineMessagingConfig: {
     channelAccessToken: 'YOUR_CHANNEL_ACCESS_TOKEN',
     channelSecret: 'YOUR_CHANNEL_SECRET',
@@ -80,10 +80,10 @@ await notification.pushMessage({
 ### Unified API
 
 ```typescript
-import BunNotification from 'bun-notification';
+import Notification from 'bun-notification';
 
 // Initialize with both APIs
-const notification = new BunNotification({
+const notification = new Notification({
   lineNotifyToken: 'YOUR_LINE_NOTIFY_TOKEN',
   lineMessagingConfig: {
     channelAccessToken: 'YOUR_CHANNEL_ACCESS_TOKEN',
@@ -117,14 +117,14 @@ await notification.send('Hello user!', { to: 'USER_ID' });
 
 ## API Reference
 
-### BunNotification
+### Notification
 
 Main notification class that supports both LINE Notify and Messaging API.
 
 #### Constructor
 
 ```typescript
-new BunNotification(config: BunNotificationConfig)
+new Notification(config: BunNotificationConfig)
 ```
 
 #### Configuration

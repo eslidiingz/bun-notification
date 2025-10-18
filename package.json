@@ -1,5 +1,5 @@
 {
-  "name": "bun-notification",
+  "name": "notification",
   "version": "1.0.0",
   "description": "A LINE notification library for Bun supporting LINE Notify and LINE Messaging API",
   "main": "dist/index.js",

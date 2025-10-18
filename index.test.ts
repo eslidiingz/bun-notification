@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
-import BunNotification from './index';
+import Notification from './index';
 
-describe('BunNotification', () => {
-  let notification: BunNotification;
+describe('Notification', () => {
+  let notification: Notification;
 
   beforeEach(() => {
-    notification = new BunNotification({
+    notification = new Notification({
       lineNotifyToken: 'test-token',
       lineMessagingConfig: {
         channelAccessToken: 'test-channel-token',
@@ -15,7 +15,7 @@ describe('BunNotification', () => {
 
   it('should create a notification instance', () => {
     expect(notification).toBeDefined();
-    expect(notification).toBeInstanceOf(BunNotification);
+    expect(notification).toBeInstanceOf(Notification);
   });
 
   it('should check if LINE Notify is available', () => {
@@ -27,7 +27,7 @@ describe('BunNotification', () => {
   });
 
   it('should handle missing LINE Notify token', () => {
-    const notificationWithoutNotify = new BunNotification({
+    const notificationWithoutNotify = new Notification({
       lineMessagingConfig: {
         channelAccessToken: 'test-channel-token',
       },
@@ -38,7 +38,7 @@ describe('BunNotification', () => {
   });
 
   it('should handle missing LINE Messaging config', () => {
-    const notificationWithoutMessaging = new BunNotification({
+    const notificationWithoutMessaging = new Notification({
       lineNotifyToken: 'test-token',
     });
 
@@ -47,7 +47,7 @@ describe('BunNotification', () => {
   });
 
   it('should handle no configuration', () => {
-    const notificationWithoutConfig = new BunNotification({});
+    const notificationWithoutConfig = new Notification({});
 
     expect(notificationWithoutConfig.isNotifyAvailable).toBe(false);
     expect(notificationWithoutConfig.isMessagingAvailable).toBe(false);
@@ -57,7 +57,7 @@ describe('BunNotification', () => {
 describe('LineNotify', () => {
   it('should throw error when no token provided', () => {
     expect(() => {
-      new BunNotification({});
+      new Notification({});
     }).not.toThrow();
   });
 });
@@ -65,7 +65,7 @@ describe('LineNotify', () => {
 describe('LineMessaging', () => {
   it('should throw error when no channel access token provided', () => {
     expect(() => {
-      new BunNotification({
+      new Notification({
         lineMessagingConfig: {
           channelAccessToken: '',
         },

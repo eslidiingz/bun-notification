@@ -1,9 +1,9 @@
-import BunNotification, { LineMessaging } from '../index';
+import Notification, { LineMessaging } from '../index';
 
 // Example: LINE Messaging API usage
 async function lineMessagingExample() {
   // Initialize with LINE Messaging API config
-  const notification = new BunNotification({
+  const notification = new Notification({
     lineMessagingConfig: {
       channelAccessToken: 'YOUR_CHANNEL_ACCESS_TOKEN_HERE',
       channelSecret: 'YOUR_CHANNEL_SECRET_HERE',

@@ -1,9 +1,9 @@
-import BunNotification from '../index';
+import Notification from '../index';
 
 // Example: Unified API usage (both LINE Notify and Messaging API)
 async function unifiedExample() {
   // Initialize with both APIs
-  const notification = new BunNotification({
+  const notification = new Notification({
     lineNotifyToken: 'YOUR_LINE_NOTIFY_TOKEN_HERE',
     lineMessagingConfig: {
       channelAccessToken: 'YOUR_CHANNEL_ACCESS_TOKEN_HERE',
@@ -75,7 +75,7 @@ async function unifiedExample() {
 
 // Example: Error handling
 async function errorHandlingExample() {
-  const notification = new BunNotification({
+  const notification = new Notification({
     // No tokens configured - will show error handling
   });
 

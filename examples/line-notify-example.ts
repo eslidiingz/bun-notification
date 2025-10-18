@@ -1,9 +1,9 @@
-import BunNotification from '../index';
+import Notification from '../index';
 
 // Example: LINE Notify usage
 async function lineNotifyExample() {
   // Initialize with LINE Notify token
-  const notification = new BunNotification({
+  const notification = new Notification({
     lineNotifyToken: 'YOUR_LINE_NOTIFY_TOKEN_HERE',
     defaultApi: 'notify',
   });
