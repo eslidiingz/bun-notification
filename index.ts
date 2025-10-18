@@ -1,7 +1,9 @@
 import { LineMessaging } from './line-messaging';
 import { LineNotify } from './line-notify';
+import { Discord } from './discord';
 import type {
-  BunNotificationConfig,
+  NotificationConfig,
+  DiscordMessageOptions,
   LineMessage,
   LineMulticastMessage,
   LineNotifyOptions,
@@ -13,9 +15,10 @@ import type {
 export class Notification {
   private lineNotify?: LineNotify;
   private lineMessaging?: LineMessaging;
-  private config: BunNotificationConfig;
+  private discord?: Discord;
+  private config: NotificationConfig;
 
-  constructor(config: BunNotificationConfig) {
+  constructor(config: NotificationConfig) {
     this.config = config;
 
     if (config.lineNotifyToken) {
@@ -24,6 +27,10 @@ export class Notification {
 
     if (config.lineMessagingConfig) {
       this.lineMessaging = new LineMessaging(config.lineMessagingConfig);
+    }
+
+    if (config.discordConfig) {
+      this.discord = new Discord(config.discordConfig.webhookUrl);
     }
   }
 
@@ -131,6 +138,56 @@ export class Notification {
     };
   }
 
+  // Discord methods
+  async sendDiscord(
+    options: DiscordMessageOptions
+  ): Promise<NotificationResult> {
+    if (!this.discord) {
+      return {
+        success: false,
+        error: 'Discord webhook not configured',
+      };
+    }
+
+    return await this.discord.send(options);
+  }
+
+  async sendDiscordText(content: string): Promise<NotificationResult> {
+    if (!this.discord) {
+      return {
+        success: false,
+        error: 'Discord webhook not configured',
+      };
+    }
+
+    return await this.discord.sendText(content);
+  }
+
+  async sendDiscordEmbed(embed: any): Promise<NotificationResult> {
+    if (!this.discord) {
+      return {
+        success: false,
+        error: 'Discord webhook not configured',
+      };
+    }
+
+    return await this.discord.sendEmbed(embed);
+  }
+
+  async sendDiscordWithUsername(
+    content: string,
+    username: string
+  ): Promise<NotificationResult> {
+    if (!this.discord) {
+      return {
+        success: false,
+        error: 'Discord webhook not configured',
+      };
+    }
+
+    return await this.discord.sendWithUsername(content, username);
+  }
+
   // Unified send method (auto-detect API)
   async send(
     message: string,
@@ -141,9 +198,18 @@ export class Notification {
       stickerPackageId?: number;
       stickerId?: number;
       messages?: LineMessage[];
+      discordOptions?: DiscordMessageOptions;
     }
   ): Promise<NotificationResult> {
     const defaultApi = this.config.defaultApi || 'notify';
+
+    // If Discord options are provided, use Discord
+    if (options?.discordOptions && this.discord) {
+      return await this.sendDiscord({
+        content: message,
+        ...options.discordOptions,
+      });
+    }
 
     // If specific messages are provided, use Messaging API
     if (options?.messages) {
@@ -188,6 +254,11 @@ export class Notification {
       } else {
         return await this.sendNotifyText(message);
       }
+    }
+
+    // Use Discord for simple text messages if it's the default
+    if (defaultApi === 'discord' && this.discord) {
+      return await this.sendDiscordText(message);
     }
 
     // Fallback to Messaging API if Notify is not available
@@ -241,9 +312,14 @@ export class Notification {
   get isMessagingAvailable(): boolean {
     return !!this.lineMessaging;
   }
+
+  get isDiscordAvailable(): boolean {
+    return !!this.discord;
+  }
 }
 
 export { LineMessaging } from './line-messaging';
+export { Discord } from './discord';
 // Export all classes and types
 export { LineNotify } from './line-notify';
 export * from './types';

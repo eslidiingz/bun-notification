@@ -1,6 +1,6 @@
 # Bun Notification
 
-A comprehensive LINE notification library for Bun that supports both LINE Notify and LINE Messaging API with full feature support including text, images, stickers, Flex Messages, and templates.
+A comprehensive notification library for Bun that supports LINE Notify, LINE Messaging API, and Discord webhooks with full feature support.
 
 [![npm version](https://badge.fury.io/js/bun-notification.svg)](https://badge.fury.io/js/bun-notification)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -10,10 +10,11 @@ A comprehensive LINE notification library for Bun that supports both LINE Notify
 
 - 🔔 **LINE Notify Support**: Send notifications through LINE Notify API
 - 💬 **LINE Messaging API**: Full support for push, reply, and multicast messages
+- 🎮 **Discord Webhook Support**: Send messages to Discord channels via webhooks
 - 🎨 **Rich Messages**: Support for text, images, stickers, location, and more
 - 🎯 **Template Messages**: Button, confirm, carousel, and image carousel templates
 - 🎪 **Flex Messages**: Create rich, interactive messages with Flex Message
-- 🔄 **Unified API**: Single interface for both LINE Notify and Messaging API
+- 🔄 **Unified API**: Single interface for all notification services
 - ⚡ **Built with Bun**: Optimized for Bun runtime with TypeScript support
 - 🛡️ **Type-safe**: Full TypeScript support with comprehensive type definitions
 - 🔧 **Message Builders**: Helper methods for creating complex messages
@@ -77,16 +78,36 @@ await notification.pushMessage({
 });
 ```
 
+### Discord
+
+```typescript
+import Notification from 'bun-notification';
+
+// Initialize with Discord webhook URL
+const notification = new Notification({
+  discordConfig: {
+    webhookUrl: 'YOUR_DISCORD_WEBHOOK_URL',
+  },
+  defaultApi: 'discord',
+});
+
+// Send a simple text message
+await notification.sendDiscordText('Hello from Bun!');
+```
+
 ### Unified API
 
 ```typescript
 import Notification from 'bun-notification';
 
-// Initialize with both APIs
+// Initialize with all APIs
 const notification = new Notification({
   lineNotifyToken: 'YOUR_LINE_NOTIFY_TOKEN',
   lineMessagingConfig: {
     channelAccessToken: 'YOUR_CHANNEL_ACCESS_TOKEN',
+  },
+  discordConfig: {
+    webhookUrl: 'YOUR_DISCORD_WEBHOOK_URL',
   },
 });
 
@@ -95,6 +116,13 @@ await notification.send('Hello from unified API!');
 
 // Message to specific user (uses Messaging API)
 await notification.send('Hello user!', { to: 'USER_ID' });
+
+// Message to Discord
+await notification.send('Hello Discord!', {
+  discordOptions: {
+    username: 'Bun Bot',
+  },
+});
 ```
 
 ## Authentication Setup
@@ -115,29 +143,41 @@ await notification.send('Hello user!', { to: 'USER_ID' });
 4. Get your Channel Access Token and Channel Secret
 5. Set up webhook URL for receiving messages
 
+### Discord Webhook
+
+1. Go to your Discord server settings
+2. Navigate to "Integrations" → "Webhooks"
+3. Click "New Webhook"
+4. Configure the webhook name and channel
+5. Copy the webhook URL
+
 ## API Reference
 
 ### Notification
 
-Main notification class that supports both LINE Notify and Messaging API.
+Main notification class that supports LINE Notify, Messaging API, and Discord.
 
 #### Constructor
 
 ```typescript
-new Notification(config: BunNotificationConfig)
+new Notification(config: NotificationConfig)
 ```
 
 #### Configuration
 
 ```typescript
-interface BunNotificationConfig {
+interface NotificationConfig {
   lineNotifyToken?: string; // LINE Notify token
   lineMessagingConfig?: {
     // LINE Messaging API config
     channelAccessToken: string;
     channelSecret?: string;
   };
-  defaultApi?: 'notify' | 'messaging'; // Default API to use
+  discordConfig?: {
+    // Discord webhook config
+    webhookUrl: string;
+  };
+  defaultApi?: 'notify' | 'messaging' | 'discord'; // Default API to use
 }
 ```
 
@@ -156,6 +196,13 @@ interface BunNotificationConfig {
 - `replyMessage(message: LineReplyMessage): Promise<NotificationResult>`
 - `multicastMessage(message: LineMulticastMessage): Promise<NotificationResult>`
 
+**Discord Methods:**
+
+- `sendDiscord(options: DiscordMessageOptions): Promise<NotificationResult>`
+- `sendDiscordText(content: string): Promise<NotificationResult>`
+- `sendDiscordEmbed(embed: any): Promise<NotificationResult>`
+- `sendDiscordWithUsername(content: string, username: string): Promise<NotificationResult>`
+
 **Unified Method:**
 
 - `send(message: string, options?: SendOptions): Promise<NotificationResult>`
@@ -164,10 +211,11 @@ interface BunNotificationConfig {
 
 - `isNotifyAvailable: boolean` - Check if LINE Notify is configured
 - `isMessagingAvailable: boolean` - Check if Messaging API is configured
+- `isDiscordAvailable: boolean` - Check if Discord is configured
 
 ### Message Types
 
-#### Text Message
+#### LINE - Text Message
 
 ```typescript
 {
@@ -176,7 +224,7 @@ interface BunNotificationConfig {
 }
 ```
 
-#### Image Message
+#### LINE - Image Message
 
 ```typescript
 {
@@ -186,7 +234,7 @@ interface BunNotificationConfig {
 }
 ```
 
-#### Sticker Message
+#### LINE - Sticker Message
 
 ```typescript
 {
@@ -196,7 +244,7 @@ interface BunNotificationConfig {
 }
 ```
 
-#### Location Message
+#### LINE - Location Message
 
 ```typescript
 {
@@ -208,7 +256,32 @@ interface BunNotificationConfig {
 }
 ```
 
-#### Template Messages
+#### Discord - Message Options
+
+```typescript
+{
+  content: 'Hello World!',
+  username: 'Custom Bot Name',
+  avatar_url: 'https://example.com/avatar.png',
+  tts: false,
+  embeds: [
+    {
+      title: 'Embed Title',
+      description: 'Embed Description',
+      color: 0x00ff00,
+      fields: [
+        {
+          name: 'Field Name',
+          value: 'Field Value',
+          inline: true
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### LINE - Template Messages
 
 **Button Template:**
 
@@ -262,6 +335,7 @@ Check out the [examples directory](./examples/) for complete working examples:
 
 - [LINE Notify Example](./examples/line-notify-example.ts)
 - [LINE Messaging API Example](./examples/line-messaging-example.ts)
+- [Discord Example](./examples/discord-example.ts)
 - [Unified API Example](./examples/unified-example.ts)
 
 ## Development

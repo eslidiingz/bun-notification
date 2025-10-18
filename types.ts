@@ -14,6 +14,79 @@ export interface LineNotifyResult {
   message: string;
 }
 
+// Discord Types
+export interface DiscordWebhookConfig {
+  webhookUrl: string;
+}
+
+export interface DiscordMessageOptions {
+  content?: string;
+  username?: string;
+  avatar_url?: string;
+  tts?: boolean;
+  embeds?: DiscordEmbed[];
+  allowed_mentions?: DiscordAllowedMentions;
+}
+
+export interface DiscordEmbed {
+  title?: string;
+  description?: string;
+  url?: string;
+  timestamp?: string;
+  color?: number;
+  footer?: DiscordEmbedFooter;
+  image?: DiscordEmbedImage;
+  thumbnail?: DiscordEmbedThumbnail;
+  author?: DiscordEmbedAuthor;
+  fields?: DiscordEmbedField[];
+}
+
+export interface DiscordEmbedFooter {
+  text: string;
+  icon_url?: string;
+  proxy_icon_url?: string;
+}
+
+export interface DiscordEmbedImage {
+  url?: string;
+  proxy_url?: string;
+  height?: number;
+  width?: number;
+}
+
+export interface DiscordEmbedThumbnail {
+  url?: string;
+  proxy_url?: string;
+  height?: number;
+  width?: number;
+}
+
+export interface DiscordEmbedAuthor {
+  name?: string;
+  url?: string;
+  icon_url?: string;
+  proxy_icon_url?: string;
+}
+
+export interface DiscordEmbedField {
+  name: string;
+  value: string;
+  inline?: boolean;
+}
+
+export interface DiscordAllowedMentions {
+  parse?: ('roles' | 'users' | 'everyone')[];
+  roles?: string[];
+  users?: string[];
+  replied_user?: boolean;
+}
+
+export interface DiscordResult {
+  success: boolean;
+  error?: string;
+  data?: any;
+}
+
 // LINE Messaging API Types
 export interface LineMessagingConfig {
   channelAccessToken: string;
@@ -70,10 +143,11 @@ export interface LineMessagingResult {
 }
 
 // Unified Types
-export interface BunNotificationConfig {
+export interface NotificationConfig {
   lineNotifyToken?: string;
   lineMessagingConfig?: LineMessagingConfig;
-  defaultApi?: 'notify' | 'messaging';
+  discordConfig?: DiscordWebhookConfig;
+  defaultApi?: 'notify' | 'messaging' | 'discord';
 }
 
 export interface NotificationResult {
